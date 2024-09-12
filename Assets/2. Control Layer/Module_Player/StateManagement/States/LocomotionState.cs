@@ -1,24 +1,27 @@
 using System;
 using UnityEngine;
 
-public class LocomotionState : IState
+namespace KayosStudios.ThirdPersonController
 {
-    public override void EnterState(PlayerController controller)
+    public class LocomotionState : IState
     {
-        Debug.Log("Player Enters LocomotionState");
-        controller.currentState = AnimationState.Locomotion;
-    }
+        public void EnterState(PlayerController controller)
+        {
+            Debug.Log("Player Enters LocomotionState");
+            controller.currentState = PlayerStates.Locomotion;
+        }
 
-    public override void UpdateState(PlayerController controller)
-    {
-        if (controller.currentGait == GaitState.Idle)
-            controller.TransitionToState(new IdleState());
+        public void UpdateState(PlayerController controller)
+        {
+            if (controller.currentGait == GaitState.Idle)
+                controller.TransitionToState(new IdleState());
 
 
-    }
+        }
 
-    public override void ExitState(PlayerController controller)
-    {
-        Debug.Log("Player Exits LocomotionState");
+        public void ExitState(PlayerController controller)
+        {
+            Debug.Log("Player Exits LocomotionState");
+        }
     }
 }
