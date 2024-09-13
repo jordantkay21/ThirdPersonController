@@ -14,20 +14,29 @@ namespace KayosStudios.ThirdPersonController
 
         #region Animation Hash Variables
         public int isIdleHash { get; private set; }
+        public int isGroundedHash { get; private set; }
+        public int isJumpingHash { get; private set; }
         public int moveSpeedHash { get; private set; }
         public int inputXHash { get; private set; }
         public int inputZHash { get; private set; }
-        public int isGroundedHash { get; private set; }
+        public int inclineAngleHash { get; private set; }
+        public int fallDurationHash { get; private set; }
+        public int currentGaitHash { get; private set; }
         #endregion
 
         #region Component Init
         private void InitilizeStringHash()
         {
             isIdleHash = Animator.StringToHash("isIdle");
+            isGroundedHash = Animator.StringToHash("isGrounded");
+            isJumpingHash = Animator.StringToHash("isJumping");
             moveSpeedHash = Animator.StringToHash("MoveSpeed");
             inputXHash = Animator.StringToHash("InputX");
             inputZHash = Animator.StringToHash("InputZ");
-            isGroundedHash = Animator.StringToHash("isGrounded");
+            inclineAngleHash = Animator.StringToHash("InclineAngle");
+            fallDurationHash = Animator.StringToHash("FallDuration");
+            currentGaitHash = Animator.StringToHash("CurrentGait");
+
         }
 
         private void InitializeAnimator()
@@ -55,11 +64,18 @@ namespace KayosStudios.ThirdPersonController
             InitializeMainCamera();
         }
 
-        public void MoveCharacter(PlayerModel model)
+        public void UpdateAnimator(PlayerModel model)
         {
+            animator.SetBool(isGroundedHash, model.isGrounded);
+            animator.SetBool(isJumpingHash, model.isJumping);
+            animator.SetBool(isIdleHash, model.isIdle);
+
             animator.SetFloat(moveSpeedHash, model.moveSpeed);
             animator.SetFloat(inputXHash, model.inputX);
             animator.SetFloat(inputZHash, model.inputZ);
+            animator.SetFloat(inclineAngleHash, model.inclineAngle);
+            animator.SetFloat(fallDurationHash, model.fallDuration);
+            animator.SetInteger(currentGaitHash, model.currentGait);
         }
 
         internal void RotateCharacter(PlayerModel playerModel)
