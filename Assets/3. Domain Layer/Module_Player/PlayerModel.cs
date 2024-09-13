@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace KayosStudios.ThirdPersonController
@@ -23,16 +24,35 @@ namespace KayosStudios.ThirdPersonController
         public float yRotation;
         public float turnSpeed = 15;
 
+        private float accelerationRate = 3f;
+        private float decelerationRate = 2f;
 
         public void AdjustLocomotionData(Vector2 input)
         {
-            if (input != Vector2.zero && isSprinting)
-                moveSpeed = 2;
-            else
-                moveSpeed = input.sqrMagnitude;
+            if (input != Vector2.zero)
+            {
+                if (isSprinting)
+                    moveSpeed = Mathf.Lerp(moveSpeed, 2f, accelerationRate * Time.deltaTime);
+                else
+                    moveSpeed = Mathf.Lerp(moveSpeed, input.sqrMagnitude, accelerationRate * Time.deltaTime);
 
-            inputX = input.x;
-            inputZ = input.y;
+                inputX = input.x;
+                inputZ = input.y;
+            }
+            else
+            {
+                //Gradually slow down to 0 when no input is detected
+                moveSpeed = Mathf.Lerp(moveSpeed, 0f, Time.deltaTime * decelerationRate);
+
+                //Reset the inputX and inputZ when fully stopped
+                if (moveSpeed <= 0.01f)
+                {
+                    inputX = 0f;
+                    inputZ = 0f;
+                    moveSpeed = 0;
+                }
+            }
+
         }
 
         public void CalculateRotation(Vector2 mouseDelta)
@@ -45,6 +65,16 @@ namespace KayosStudios.ThirdPersonController
             xRotation -= mouseY;
             xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
+        }
+
+        IEnumerator SlowToStop()
+        {
+            while(moveSpeed >= 0)
+            {
+                moveSpeed = Mathf.Lerp(moveSpeed, 0, Time.deltaTime);
+            }
+
+            yield return null;
         }
     }
 }
