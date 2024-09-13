@@ -15,9 +15,11 @@ namespace KayosStudios.ThirdPersonController
         public PlayerStates currentState;
         public GaitState currentGait;
 
+        public Vector2 movementInput;
+
         private void OnEnable()
         {
-            InputHandler.Instance.OnMove += input => ProcessLocomotionInput(input);
+            InputHandler.Instance.OnMove += input => movementInput = input;
             InputHandler.Instance.OnSprint += isSprinting => playerModel.isSprinting = isSprinting;
             InputHandler.Instance.OnLook += mouseDelta => ProcessAimInput(mouseDelta);
         }
@@ -56,23 +58,6 @@ namespace KayosStudios.ThirdPersonController
         public void ExecuteCommand(ICommand command)
         {
             command.Execute(this);
-        }
-
-        public void ProcessLocomotionInput(Vector2 input)
-        {
-            playerModel.AdjustLocomotionData(input);
-            playerView.MoveCharacter(playerModel);
-
-            if (input == Vector2.zero)
-                currentGait = GaitState.Idle;
-            else if (input.sqrMagnitude <= .5f)
-                currentGait = GaitState.Walk;
-            else
-                currentGait = GaitState.Run;
-
-
-            if (playerModel.isSprinting)
-                currentGait = GaitState.Sprint;
         }
 
         public void ProcessAimInput(Vector2 mouseDelta)
