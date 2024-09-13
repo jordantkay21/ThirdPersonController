@@ -18,10 +18,6 @@ namespace KayosStudios.ThirdPersonController
         public int inputXHash { get; private set; }
         public int inputZHash { get; private set; }
         public int isGroundedHash { get; private set; }
-        public int InclineAngleHash { get; private set; }
-        public int CurrentGaitHash { get; private set; }
-        public int isJumpingHash { get; private set; }
-        public int FallDurationHash { get; private set; }
         #endregion
 
         #region Component Init
@@ -32,10 +28,6 @@ namespace KayosStudios.ThirdPersonController
             inputXHash = Animator.StringToHash("InputX");
             inputZHash = Animator.StringToHash("InputZ");
             isGroundedHash = Animator.StringToHash("isGrounded");
-            isJumpingHash = Animator.StringToHash("isJumping");
-            InclineAngleHash = Animator.StringToHash("InclineAngle");
-            CurrentGaitHash = Animator.StringToHash("CurrentGait");
-            FallDurationHash = Animator.StringToHash("FallDuration");
         }
 
         private void InitializeAnimator()

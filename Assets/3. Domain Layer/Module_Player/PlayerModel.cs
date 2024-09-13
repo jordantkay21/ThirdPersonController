@@ -12,51 +12,37 @@ namespace KayosStudios.ThirdPersonController
     {
         #region Locomotion Variables
         public bool isSprinting;
-        public bool isIdle;
         public float moveSpeed;
         public float inputX;
         public float inputZ;
-        public float inclineAngle;
-        public int currentGait; //0 - Idle | 1 - Walking | 2 - Running | 3 - Sprinting
-        private float animAccelerationRate = 3f;
-        private float animDecelerationRate = 2f;
         #endregion
 
-        #region Aim Variables
         private float mouseSensitivity = 1f;
         [Tooltip("Adjusts the vertical rotation (up and down)")]
         public float xRotation;
         [Tooltip("Adjusts the horizontal rotation (left and right)")]
         public float yRotation;
         public float turnSpeed = 15;
-        #endregion
 
-        #region Jump Variables
-        bool isJumping;
-        #endregion
-
-        #region Grounded Variabled
-        bool isGrounded;
-        float fallDuration;
-        #endregion
+        private float accelerationRate = 3f;
+        private float decelerationRate = 2f;
 
         public void AdjustLocomotionData(Vector2 input)
         {
             if (input != Vector2.zero)
             {
                 if (isSprinting)
-                    moveSpeed = Mathf.Lerp(moveSpeed, 2f, animAccelerationRate * Time.deltaTime);
+                    moveSpeed = Mathf.Lerp(moveSpeed, 2f, accelerationRate * Time.deltaTime);
                 else
-                    moveSpeed = Mathf.Lerp(moveSpeed, input.sqrMagnitude, animAccelerationRate * Time.deltaTime);
+                    moveSpeed = Mathf.Lerp(moveSpeed, input.sqrMagnitude, accelerationRate * Time.deltaTime);
 
                 inputX = input.x;
                 inputZ = input.y;
             }
             else
             {
-                
                 //Gradually slow down to 0 when no input is detected
-                moveSpeed = Mathf.Lerp(moveSpeed, 0f, Time.deltaTime * animDecelerationRate);
+                moveSpeed = Mathf.Lerp(moveSpeed, 0f, Time.deltaTime * decelerationRate);
 
                 //Reset the inputX and inputZ when fully stopped
                 if (moveSpeed <= 0.01f)
@@ -81,5 +67,14 @@ namespace KayosStudios.ThirdPersonController
 
         }
 
+        IEnumerator SlowToStop()
+        {
+            while(moveSpeed >= 0)
+            {
+                moveSpeed = Mathf.Lerp(moveSpeed, 0, Time.deltaTime);
+            }
+
+            yield return null;
+        }
     }
 }
