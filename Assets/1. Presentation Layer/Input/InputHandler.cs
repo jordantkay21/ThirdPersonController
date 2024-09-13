@@ -11,6 +11,7 @@ public class InputHandler : MonoBehaviour
     public event Action<Vector2> OnMove; //Event Triggered when movement input is recieved
     public event Action<Vector2> OnLook; //Event triggered when look input is recieved
     public event Action<bool> OnSprint; //Triggered when the sprint button is pressed/released
+    public event Action OnJump;
 
     public Vector2 moveInput { get; private set; }
     private void OnEnable()
@@ -36,6 +37,8 @@ public class InputHandler : MonoBehaviour
         InputActions.Player.Look.performed += ctx => OnLook?.Invoke(ctx.ReadValue<Vector2>());
         InputActions.Player.Sprint.performed += ctx => OnSprint?.Invoke(true);
         InputActions.Player.Sprint.canceled += ctx => OnSprint?.Invoke(false);
+        
+        InputActions.Player.Jump.performed += ctx => OnJump?.Invoke();
     }
 
     private void Update()
