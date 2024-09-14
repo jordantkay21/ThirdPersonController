@@ -12,6 +12,10 @@ namespace KayosStudios.ThirdPersonController
 
         public Transform head;
 
+        public bool applyRootmotion = true;
+
+
+
         #region Animation Hash Variables
         public int isIdleHash { get; private set; }
         public int isGroundedHash { get; private set; }
@@ -62,6 +66,20 @@ namespace KayosStudios.ThirdPersonController
             InitilizeStringHash();
             InitializeCharacterController();
             InitializeMainCamera();
+        }
+
+        private void OnAnimatorMove()
+        {
+
+                Vector3 rootMotion = PlayerController.Instance.playerModel.CalculateRootMotion(animator.deltaPosition);
+
+                characterController.Move(rootMotion);
+
+        }
+
+        public void ApplyGravity(float fallVelocity)
+        {
+            characterController.Move(new Vector3(0, fallVelocity * Time.deltaTime, 0));
         }
 
         public void UpdateAnimator(PlayerModel model)

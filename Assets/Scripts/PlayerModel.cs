@@ -43,8 +43,9 @@ namespace KayosStudios.ThirdPersonController
 
         private float accelerationRate = 3f;
         private float decelerationRate = 2f;
-        public float gravity = -9.81f;
-        public float jumpForce = 5f;
+        private float gravity = -9.81f;
+        private float jumpForce = 5f;
+
 
         public void AdjustLocomotionData(Vector2 input)
         {
@@ -74,10 +75,8 @@ namespace KayosStudios.ThirdPersonController
 
         }
 
-        public void UpdateGravity(bool isGroundedInput)
+        public void CalculateGravity()
         {
-            isGrounded = isGroundedInput;
-
             if (isGrounded)
             {
                 fallDuration = 0f;
@@ -103,6 +102,11 @@ namespace KayosStudios.ThirdPersonController
             }
         }
 
+        public Vector3 CalculateRootMotion(Vector3 rootMotion)
+        {
+            rootMotion.y = verticalVelocity * Time.deltaTime;
+            return rootMotion;
+        }
         public void CalculateRotation(Vector2 mouseDelta)
         {
             //Get mouse input and adjust by sensitivity
